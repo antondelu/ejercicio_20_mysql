@@ -1,37 +1,47 @@
-const connectionDb = require("../db");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const dataUsers = new Schema({
+  firstname: String,
+  lastname: String,
+  age: Number,
+});
+const Users = mongoose.model("Users", dataUsers);
 
 const userControlers = {
-  getUsers: async (req, res) => {
-    const [listaUsuarios, campos] = await connectionDb("SELECT * FROM users");
-    return res.render("index", {
-      listaUsuarios,
-    });
+  index: async (req, res) => {
+    const usuarios = await Users.find();
+    return res.render("index", { usuarios });
   },
-  getCreateUsers: async (req, res) => {
+  create: async (req, res) => {
     res.render("nuevoUsuario");
   },
-  postCreateUsers: async (req, res) => {
-    await connectionDb(
-      `INSERT INTO users (firstname, lastname, age) VALUES ("${req.body.firstname}","${req.body.lastname}", "${req.body.age}")`
-    );
+  store: async (req, res) => {
+    const newUser = Users.create({
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      age: req.body.age,
+    });
     res.redirect("/usuarios");
   },
-  getEditUser: async (req, res) => {
-    const [usuario] = await connectionDb(
-      `SELECT * FROM users WHERE id =${req.params.id}`
-    );
-
+  edit: async (req, res) => {
+    const usuario = await Users.findById(req.params.id);
     res.render("editarUsuario", { usuario });
   },
-  postEditUser: async (req, res) => {
-    console.log(req.body);
-    await connectionDb(
-      `UPDATE users SET firstname = "${req.body.firstname}",lastname = "${req.body.lastname}", age= "${req.body.age}" WHERE id ="${req.params.id}"`
+  update: async (req, res) => {
+    await Users.updateOne(
+      { _id: req.params.id },
+      {
+        $set: {
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          age: req.body.age,
+        },
+      }
     );
     res.redirect("/usuarios");
   },
-  deleteUser: async (req, res) => {
-    await connectionDb(`DELETE  FROM users WHERE id =${req.params.id}`);
+  destroy: async (req, res) => {
+    await Users.deleteOne({ _id: req.params.id });
     res.redirect("/usuarios");
   },
 };

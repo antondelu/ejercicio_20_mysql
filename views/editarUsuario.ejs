@@ -16,8 +16,7 @@
     <div class="container">
       <h1>Editar usuario</h1>
 
-      <% for(let user of usuario){%>
-      <form action="/usuarios/editar/<%=user.id %>" method="post">
+      <form action="/usuarios/editar/<%=usuario.id %>" method="post">
         <div class="mb-3">
           <label for="nombre" class="form-label">Nombre</label>
           <input
@@ -25,7 +24,7 @@
             class="form-control"
             id="nombre"
             name="firstname"
-            value="<%= user.firstname%>"
+            value="<%= usuario.firstname%>"
             placeholder="Nombre"
           />
         </div>
@@ -36,7 +35,7 @@
             class="form-control"
             id="apellido"
             name="lastname"
-            value="<%= user.lastname%>"
+            value="<%= usuario.lastname%>"
             placeholder="Apellido"
           />
         </div>
@@ -47,13 +46,12 @@
             class="form-control"
             id="edad"
             name="age"
-            value="<%= user.age%>"
+            value="<%= usuario.age%>"
             placeholder="Edad"
           />
         </div>
         <button type="submit" class="btn btn-outline-success">Editar</button>
       </form>
-      <% } %>
     </div>
   </body>
 </html>
